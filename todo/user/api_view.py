@@ -5,10 +5,20 @@ from rest_framework.views import APIView
 
 class ReadTask(APIView):
     def get(self,request):
+        completed = request.GET.get("completed")
         tasks = Task.objects.all()
 
+        if completed is not None:
+             is_completed = completed.lower() == "true"
+
+             tasks = Task.objects.filter(completed = is_completed)
         serializer = TaskSerializer(tasks,many=True)
         return Response(serializer.data)
+
+
+
+
+     
 
 class CreateTask(APIView):
     def post(self,request):
