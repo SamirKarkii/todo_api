@@ -1,20 +1,58 @@
-from .models import Task
-from rest_framework.response import Response
-from .serializers import TaskSerializer
+# from .models import Task
+# from rest_framework.response import Response
+# from .serializers import TaskSerializer
+# from rest_framework.views import APIView
+
+# class ReadTask(APIView):
+#     def get(self,request):
+#         completed = request.GET.get("completed")
+#         tasks = Task.objects.all()
+
+#         if completed is not None:
+#              is_completed = completed.lower() == "true"
+
+#              tasks = Task.objects.filter(completed = is_completed)
+#         serializer = TaskSerializer(tasks,many=True)
+#         return Response(serializer.data)
+    
+
+# class ReadTask(APIView):
+#     def get(self, request):
+#         title_query = request.GET.get("title")
+#         title = Task.objects.all()
+
+#         if title_query is not None:
+#              title = Task.objects.filter(title__icontains=title_query)
+#         serializer = TaskSerializer(title,many=True)
+#         return Response(serializer.data)
+
+
+
+
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import Task
+from .serializers import TaskSerializer
+from rest_framework import status
 
 class ReadTask(APIView):
-    def get(self,request):
+    def get(self, request):
+  
         completed = request.GET.get("completed")
+        title_query = request.GET.get("title")
+        
         tasks = Task.objects.all()
 
         if completed is not None:
-             is_completed = completed.lower() == "true"
+            is_completed = completed.lower() == "true"
+            tasks = tasks.filter(completed=is_completed)  
 
-             tasks = Task.objects.filter(completed = is_completed)
-        serializer = TaskSerializer(tasks,many=True)
+        if title_query is not None:
+            tasks = tasks.filter(title__icontains=title_query)  
+
+    
+        serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
-
 
 
 
@@ -26,10 +64,14 @@ class CreateTask(APIView):
 
         if serializer.is_valid():
                 serializer.save()
-                return Response({
-                     "message" : " Task Created "
-                })
-        return Response(serializer.errors)
+                return Response(
+                     serializer.data, status=201
+                )
+        return Response(serializer.errors, status=400)
+    
+
+
+
 
 class PatchTask(APIView):
      def patch(self,request,id):
