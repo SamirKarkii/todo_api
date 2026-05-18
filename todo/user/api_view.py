@@ -101,4 +101,11 @@ class DeleteTask(APIView):
           return Response({
                "message" : "Course deleted successfully"
           })
-          
+
+
+#Generic View
+from rest_framework.generics import ListCreateAPIView
+class TaskListCreateView(ListCreateAPIView):
+
+     queryset = Task.objects.all()
+     serializer = TaskSerializer
