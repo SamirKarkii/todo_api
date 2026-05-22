@@ -110,8 +110,24 @@ from .serializers import TaskSerializer
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 
 class ReadCreateTask(ListCreateAPIView):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        completed = self.request.GET.get("completed")
+        title = self.request.GET.get("title")
+
+        if completed is not None: 
+            is_completed = completed.lower() == "true"
+            queryset = queryset.filter(completed = is_completed)
+
+        if title is not None:  
+            queryset = queryset.filter(title__icontains=title)
+
+        return queryset
+
+
+
 
 class UpdateDelete(RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
