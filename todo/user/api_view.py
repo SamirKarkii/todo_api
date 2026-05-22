@@ -15,7 +15,6 @@
 #         serializer = TaskSerializer(tasks,many=True)
 #         return Response(serializer.data)
     
-
 # class ReadTask(APIView):
 #     def get(self, request):
 #         title_query = request.GET.get("title")
@@ -29,83 +28,92 @@
 
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Task
-from .serializers import TaskSerializer
-from rest_framework import status
+# from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from .models import Task
+# from .serializers import TaskSerializer
+# from rest_framework import status
 
-class ReadTask(APIView):
-    def get(self, request):
+# class ReadTask(APIView):
+#     def get(self, request):
   
-        completed = request.GET.get("completed")
-        title_query = request.GET.get("title")
+#         completed = request.GET.get("completed")
+#         title_query = request.GET.get("title")
         
-        tasks = Task.objects.all()
+#         tasks = Task.objects.all()
 
-        if completed is not None:
-            is_completed = completed.lower() == "true"
-            tasks = tasks.filter(completed=is_completed)  
+#         if completed is not None:
+#             is_completed = completed.lower() == "true"
+#             tasks = tasks.filter(completed=is_completed)  
 
-        if title_query is not None:
-            tasks = tasks.filter(title__icontains=title_query)  
+#         if title_query is not None:
+#             tasks = tasks.filter(title__icontains=title_query)  
 
     
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+#         serializer = TaskSerializer(tasks, many=True)
+#         return Response(serializer.data)
 
 
 
      
 
-class CreateTask(APIView):
-    def post(self,request):
-        serializer = TaskSerializer(data=request.data)
+# class CreateTask(APIView):
+#     def post(self,request):
+#         serializer = TaskSerializer(data=request.data)
 
-        if serializer.is_valid():
-                serializer.save()
-                return Response(
-                     serializer.data, status=201
-                )
-        return Response(serializer.errors, status=400)
+#         if serializer.is_valid():
+#                 serializer.save()
+#                 return Response(
+#                      serializer.data, status=201
+#                 )
+#         return Response(serializer.errors, status=400)
     
 
 
+# class PatchTask(APIView):
+#      def patch(self,request,id):
+#         try: 
+#                course = Task.objects.get(id=id)
+#         except Task.DoesNotExist:
+#              return Response({
+#                  "error" : "Task doesnot exist "
+#              })
+#         serializer = TaskSerializer(instance=course, data = request.data, partial = True)
+#         if serializer.is_valid():
+#              serializer.save()
+#              return Response({
+#                   "message": "Course updated"
+#              })
+#         return Response(serializer.errors)
 
 
-class PatchTask(APIView):
-     def patch(self,request,id):
-        try: 
-               course = Task.objects.get(id=id)
-        except Task.DoesNotExist:
-             return Response({
-                 "error" : "Task doesnot exist "
-             })
-        serializer = TaskSerializer(instance=course, data = request.data, partial = True)
-        if serializer.is_valid():
-             serializer.save()
-             return Response({
-                  "message": "Course updated"
-             })
-        return Response(serializer.errors)
 
-class DeleteTask(APIView):
-     def delete(self,request,id): 
-          try: 
-               task = Task.objects.get(id=id)
-          except: 
-               return Response({
-                "message" : "Course doesnot exists "
-               })
-          task.delete()
-          return Response({
-               "message" : "Course deleted successfully"
-          })
+# class DeleteTask(APIView):
+#      def delete(self,request,id): 
+#           try: 
+#                task = Task.objects.get(id=id)
+#           except: 
+#                return Response({
+#                 "message" : "Course doesnot exists "
+#                })
+#           task.delete()
+#           return Response({
+#                "message" : "Course deleted successfully"
+
+     
+#           })
 
 
-#Generic View
-from rest_framework.generics import ListCreateAPIView
-class TaskListCreateView(ListCreateAPIView):
 
-     queryset = Task.objects.all()
-     serializer = TaskSerializer
+from .models import Task
+from .serializers import TaskSerializer
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
+
+class ReadCreateTask(ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+class UpdateDelete(RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
