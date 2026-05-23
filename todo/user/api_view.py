@@ -142,3 +142,15 @@ class UpdateDelete(RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin,CreateModelMixin
+
+#maual how mixin works 
+class MixinExample(ListModelMixin,CreateModelMixin,GenericAPIView): 
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    def get(self,request): 
+        return self.list(request)
+    def post(self,request): 
+        return self.create(request)
