@@ -109,8 +109,11 @@ from .models import Task
 from .serializers import TaskSerializer
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.filters import SearchFilter
+from rest_framework.permissions import IsAuthenticated
+
 
 class ReadCreateTask(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = TaskSerializer
     queryset = Task.objects.all()
     filter_backends = [SearchFilter]
@@ -139,8 +142,19 @@ class ReadCreateTask(ListCreateAPIView):
 
 
 class UpdateDelete(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+
+
+
+
+
+
+
+
+
 
 
 # from rest_framework.generics import GenericAPIView
