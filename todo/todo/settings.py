@@ -19,10 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--4x1i_%5u*oc21tvfajnwfbbg$#8k08ctm77y_wc2e#4k!lj8#"
 
-# SECURITY WARNING: don't run with debug turned on in production!
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -124,6 +128,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+
+
+#without this drf would use: default authentication methods, usually session authentication or BasicAuthentication depending on setup 
 REST_FRAMEWORK = {
 
     "DEFAULT_AUTHENTICATION_CLASSES": (

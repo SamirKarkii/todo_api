@@ -105,7 +105,7 @@
 
 
 
-from .models import Task
+from .models import Task,User
 from .serializers import TaskSerializer
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.filters import SearchFilter
@@ -118,6 +118,10 @@ class ReadCreateTask(ListCreateAPIView):
     queryset = Task.objects.all()
     filter_backends = [SearchFilter]
     search_fields = ["title"]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
     def get_queryset(self):
         queryset = super().get_queryset()

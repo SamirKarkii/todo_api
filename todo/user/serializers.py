@@ -5,7 +5,7 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = "__all__"
+        fields = ["id", "title", "description", "completed", "owner"]
 
     
     def validate_title(self,value):
@@ -14,7 +14,7 @@ class TaskSerializer(serializers.ModelSerializer):
         return value
     
     
-    def validated_data(self,data):
+    def validate_data(self,data):
         if data['title'] == data['description']:
             raise serializers.ValidationError("title and description cannot be same ")
         return data

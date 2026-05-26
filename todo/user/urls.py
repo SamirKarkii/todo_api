@@ -13,7 +13,9 @@
 
 from django.urls import path
 from .api_view import ReadCreateTask,UpdateDelete
-from rest_framework_simplejwt.views import TokenObtainPairView
+
+#checks credentials, authenticates user, generates acces token/refresh token , and returns response 
+from rest_framework_simplejwt.views import TokenObtainPairView 
 
 urlpatterns = [
     path("tasks/", ReadCreateTask.as_view()),
