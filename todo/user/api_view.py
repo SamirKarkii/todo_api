@@ -120,22 +120,20 @@ class ReadCreateTask(ListCreateAPIView):
     search_fields = ["title"]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
+        serializer.save(owner=self.request.user) 
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = Task.objects.all()
+        queryset = queryset.filter(owner=self.request.user)
         
         completed = self.request.GET.get("completed")
-     #    title = self.request.GET.get("title")
+ 
         ordering = self.request.GET.get("ordering")
 
         if completed is not None: 
             is_completed = completed.lower() == "true"
             queryset = queryset.filter(completed = is_completed)
 
-     #    if title is not None:  
-     #        queryset = queryset.filter(title__icontains=title)
        
         if ordering is not None: 
             queryset = queryset.order_by(ordering)
@@ -149,6 +147,11 @@ class UpdateDelete(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        queryset = Task.objects.all()
+        queryset = queryset.filter(owner=self.request.user)
+        return queryset 
 
 
 
