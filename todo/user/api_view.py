@@ -125,7 +125,6 @@ class ReadCreateTask(ListCreateAPIView):
     def get_queryset(self):
         queryset = Task.objects.all()
         queryset = queryset.filter(owner=self.request.user)
-        
         completed = self.request.GET.get("completed")
  
         ordering = self.request.GET.get("ordering")
