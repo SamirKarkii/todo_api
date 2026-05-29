@@ -5,7 +5,8 @@ class TaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Task
-        fields = ["id", "title", "description", "completed", "owner"]
+        fields = ["id", "title", "description", "completed", "owner","created_at"]
+        read_only_fileds = ["owner","created_at"]
 
     
     def validate_title(self,value):

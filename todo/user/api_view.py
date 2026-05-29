@@ -110,6 +110,7 @@ from .serializers import TaskSerializer
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwner
 
 
 class ReadCreateTask(ListCreateAPIView):
@@ -119,14 +120,13 @@ class ReadCreateTask(ListCreateAPIView):
     filter_backends = [SearchFilter]
     search_fields = ["title"]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer): #else it will take what user sent
         serializer.save(owner=self.request.user) 
 
     def get_queryset(self):
         queryset = Task.objects.all()
         queryset = queryset.filter(owner=self.request.user)
         completed = self.request.GET.get("completed")
- 
         ordering = self.request.GET.get("ordering")
 
         if completed is not None: 
@@ -142,21 +142,17 @@ class ReadCreateTask(ListCreateAPIView):
 
 
 
+
+
 class UpdateDelete(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated,IsOwner] #Because our serializer update() method does NOT update owner., # Usually we make fields like owner:read_only=True
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.all()
+        queryset = Task.objects.all()  
         queryset = queryset.filter(owner=self.request.user)
         return queryset 
-
-
-
-
-
-
 
 
 
