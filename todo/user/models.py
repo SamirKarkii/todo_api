@@ -6,7 +6,7 @@ class Task(models.Model):
     description = models.TextField()
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,null=True, blank=True)
+    owner = models.ForeignKey(User,on_delete=models.CASCADE,null=True, blank=True, related_name="tasks")
     
     def __str__(self):
         return self.title

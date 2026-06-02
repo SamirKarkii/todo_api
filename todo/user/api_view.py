@@ -150,7 +150,7 @@ class UpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.all()  
+        queryset = Task.objects.select_related("owner") #the opeimization doesn't make a diff cause in serializer owner_id is stored not task.onwer.username
         queryset = queryset.filter(owner=self.request.user)
         return queryset 
 
