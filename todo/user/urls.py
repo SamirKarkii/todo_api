@@ -12,7 +12,7 @@
 
 
 from django.urls import path
-from .api_view import ReadCreateTask,UpdateDelete
+from .api_view import ReadCreateTask,UpdateDelete,TaskStats
 
 #checks credentials, authenticates user, generates acces token/refresh token , and returns response 
 from rest_framework_simplejwt.views import TokenObtainPairView 
@@ -22,5 +22,6 @@ urlpatterns = [
     path("tasks/", ReadCreateTask.as_view()),
     path("tasks/<int:pk>/", UpdateDelete.as_view()),
     path("token/", TokenObtainPairView.as_view()),
-    path("token/refresh/", TokenRefreshView.as_view())
+    path("token/refresh/", TokenRefreshView.as_view()),
+    path("task-stats/", TaskStats.as_view()),
 ]

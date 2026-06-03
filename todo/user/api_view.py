@@ -111,6 +111,9 @@ from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIVi
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
+from django.db.models import Count
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
 class ReadCreateTask(ListCreateAPIView):
@@ -150,9 +153,23 @@ class UpdateDelete(RetrieveUpdateDestroyAPIView):
     serializer_class = TaskSerializer
 
     def get_queryset(self):
-        queryset = Task.objects.select_related("owner") #the opeimization doesn't make a diff cause in serializer owner_id is stored not task.onwer.username
+        queryset = Task.objects.select_related("owner") 
         queryset = queryset.filter(owner=self.request.user)
         return queryset 
+    
+
+
+class TaskStats(APIView): 
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request): 
+        total_task = Task.objects.filter(owner=request.user).count()
+        completed_task = Task.objects.filter(owner=request.user,completed=True).count()
+
+        return Response({
+            "total_tasks" : total_task, 
+            "completed_task" : completed_task
+        })
 
 
 
